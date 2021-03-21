@@ -4,6 +4,24 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
 import { signup } from "../reducers/user";
+import {Checkbox} from "@material-ui/core"
+import DateFnsUtils from '@date-io/date-fns';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import { makeStyles } from '@material-ui/core/styles';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+
+
+const BOX = styled.div`
+  background: mediumseagreen;
+  border-left: 10px solid red;  
+`
 
 export const StyledAuth = styled.div`
   width: 385px;
@@ -62,8 +80,40 @@ export const StyledAuth = styled.div`
   }
 `;
 
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    display: 'block',
+    marginTop: theme.spacing(2),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+}));
+
 const Signup = ({ setAuth }) => {
+  const identityclasses = useStyles();
   const dispatch = useDispatch();
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [identity, setIdentity] = React.useState('');
+  const [open, setOpen] = React.useState(false);
+
+  const handleChange = (event) => {
+    setIdentity(event.target.value);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
   const firstname = useInput("");
   const lastname = useInput("");
@@ -100,11 +150,15 @@ const Signup = ({ setAuth }) => {
     }
 
     const payload = {
+      identity: identity,
       username: username.value,
       firstname: firstname.value,
       lastname: lastname.value,
       email: email.value,
       password: password1.value,
+      birthyear: selectedDate.getFullYear(),
+      birthmonth:selectedDate.getMonth(),
+      birthday:selectedDate.getDate()
     };
 
     const clearForm = () => {
@@ -120,9 +174,29 @@ const Signup = ({ setAuth }) => {
   };
 
   return (
-    <StyledAuth>
-      <h2>Create your account</h2>
-      <form onSubmit={handleSubmit}>
+      <StyledAuth>
+	 
+    <h2>Create your account</h2>
+	  <form onSubmit={handleSubmit}>
+        <div>
+          <FormControl className={identityclasses.formControl}>
+          <InputLabel id="identity">identity</InputLabel>
+          <Select
+            labelId="identyti"
+            id="identity-select"
+            open={open}
+            onClose={handleClose}
+            onOpen={handleOpen}
+            value={identity}
+            onChange={handleChange}
+          >
+            <MenuItem value={"student"}>Student</MenuItem>
+            <MenuItem value={"teacher"}>Teacher</MenuItem>
+            <MenuItem value={"parent"}>Parent</MenuItem>
+          </Select>
+        </FormControl>
+        </div>
+        
         <div className="input-group">
           <input
             type="text"
@@ -163,6 +237,22 @@ const Signup = ({ setAuth }) => {
             onChange={password2.onChange}
           />
         </div>
+        <div>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}> 
+            <KeyboardDatePicker
+              margin="normal"
+              id="date-picker-dialog"
+              label="Birthday"
+              format="MM/dd/yyyy"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+        </MuiPickersUtilsProvider>
+        </div>
+
         <div className="action input-group">
           <span className="pointer" onClick={() => setAuth("LOGIN")}>
             Signin instead

@@ -19,6 +19,7 @@ const Login = ({ setAuth }) => {
     }
 
     const payload = {
+
       email: email.value,
       password: password.value,
     };

@@ -67,9 +67,10 @@ export const timeSince = (timestamp) => {
   return Math.floor(seconds) + " seconds";
 };
 
+//mjc netlink
 export const upload = async (resourceType, file) => {
   const formData = new FormData();
-  formData.append("upload_preset", "youtubeclone");
+  formData.append("upload_preset", "netlink");
   formData.append("file", file);
 
   let toastId = null;

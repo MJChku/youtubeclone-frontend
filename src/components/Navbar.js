@@ -102,7 +102,7 @@ const Navbar = () => {
           onClick={handleToggleSidebar}
         />
         <span>
-          <Link to="/">YouTube Clone</Link>
+          <Link to="/">NetLink</Link>
         </span>
       </div>
 
